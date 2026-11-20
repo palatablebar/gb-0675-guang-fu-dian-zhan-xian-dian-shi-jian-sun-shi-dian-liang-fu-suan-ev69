@@ -6,3 +6,7 @@ if(filePicker){
  document.querySelector('#import-csv').addEventListener('click',async event=>{event.target.disabled=true;try{const response=await fetch('/api/runs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csv_text:editor.value})});const data=await response.json();if(!response.ok)throw Error(data.detail);location.href=location.pathname+'?run_id='+data.manifest.run_id;}catch(e){editor.setCustomValidity(e.message);editor.reportValidity();}finally{event.target.disabled=false;}});
  editor.addEventListener('input',()=>editor.setCustomValidity(''));
 }
+const policySwitch=document.querySelector('#policy-switch');
+if(policySwitch){
+ policySwitch.addEventListener('click',async()=>{if(solar.busy)return;solar.busy=true;status.textContent='切换中…';try{const version=document.querySelector('#policy-version').value;const response=await fetch('/api/delivery/policy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({version})});const data=await response.json();if(!response.ok)throw Error(data.detail);const url=new URL(location.href);url.searchParams.set('run_id',document.body.dataset.runId);location.href=url;}catch(error){status.textContent=error.message;}finally{solar.busy=false;}});
+}

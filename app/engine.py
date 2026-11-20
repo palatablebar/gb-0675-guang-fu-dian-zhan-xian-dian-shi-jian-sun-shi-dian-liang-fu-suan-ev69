@@ -6,8 +6,9 @@ from app.config import ROOT, MODULES, MAX_BYTES
 from app.errors import BusinessError
 from app.manifest import digest, make_manifest
 
-def evaluate(payload=None, until=7, snapshot=None):
+def evaluate(payload=None, until=None, snapshot=None):
     payload=payload or {}
+    until=until or len(MODULES)
     dataset=payload.get('dataset','dirty')
     if dataset not in {'dirty','clean','legacy'}: raise BusinessError('BAD_DATASET','样例名称无效')
     if not isinstance(payload.get('overrides',{}),dict): raise BusinessError('BAD_CONTEXT','参数须为对象')

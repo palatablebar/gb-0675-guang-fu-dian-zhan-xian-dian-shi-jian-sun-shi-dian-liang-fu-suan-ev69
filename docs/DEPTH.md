@@ -13,6 +13,7 @@
 | M5 损失核算 | 执行并复核损失核算 | `POST /api/loss` | `app/modules/loss/rules.py` | `tests/test_loss.py` |
 | M6 能量对账 | 执行并复核能量对账 | `POST /api/reconcile` | `app/modules/reconcile/rules.py` | `tests/test_reconcile.py` |
 | M7 运行归档 | 执行并复核运行归档 | `POST /api/archive` | `app/modules/archive/rules.py` | `tests/test_archive.py` |
+| M8 证据交付 | 执行并复核证据交付 | `POST /api/delivery` | `app/modules/delivery/rules.py` | `tests/test_delivery.py` |
 
 ## 陷阱登记
 
@@ -29,6 +30,10 @@
 | TRAP-06 | 全角千分位 | 静默错算或证据丢失 | 以可复核规则显式处理 | `app/modules/devices/rules.py` | `tests/test_devices.py::test_fullwidth_number` |
 | TRAP-11 | UTC归一 | 静默错算或证据丢失 | 以可复核规则显式处理 | `app/modules/devices/rules.py` | `tests/test_devices.py::test_time_equivalence` |
 | TRAP-23 | 限电区间并集 | 静默错算或证据丢失 | 以可复核规则显式处理 | `app/modules/slicing/rules.py` | `tests/test_slicing.py::test_overlapping_real` |
+| TRAP-31 | 未授权原值混入交付 | 静默外发受限字段 | 指纹替代+构建后泄漏自检 | `app/modules/delivery/rules.py` | `tests/test_delivery.py::test_no_unauthorized_raw_leak` |
+| TRAP-32 | 口径变更后旧策略误用 | 按旧口径继续交付 | 切换与交付前重判口径，失配拒绝 | `app/modules/delivery/policy.py` | `tests/test_delivery.py::test_caliber_mismatch_refused_and_state_unchanged` |
+| TRAP-33 | 策略切换中途失败 | 半切换状态数据错乱 | 单事务执行，失败回滚保持旧版 | `app/store.py` | `tests/test_delivery.py::test_switch_transaction_rollback` |
+| TRAP-34 | 重跑重复或覆盖已复核 | 重复记录或结果丢失 | 摘要幂等复用，漂移拒写不覆盖 | `app/store.py` | `tests/test_delivery.py::test_rerun_no_duplicate_no_overwrite_reviewed` |
 
 ## 对账规则
 
